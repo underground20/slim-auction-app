@@ -1,8 +1,11 @@
 docker-up:
 	docker-compose up -d
 
+psalm:
+	docker-compose exec api-php-cli composer psalm
+
 cs-fix:
-		docker-compose exec api-php-cli composer cs-fix
+	docker-compose exec api-php-cli composer cs-fix
 
 lint:
 	docker-compose exec api-php-cli composer lint
