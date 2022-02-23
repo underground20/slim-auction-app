@@ -1,6 +1,15 @@
 docker-up:
 	docker-compose up -d
 
+test-unit:
+	docker-compose exec api-php-cli composer test -- --testsuite=unit
+
+test-functional:
+	docker-compose exec api-php-cli composer test -- --testsuite=functional
+
+test:
+	docker-compose exec api-php-cli composer test
+
 psalm:
 	docker-compose exec api-php-cli composer psalm
 

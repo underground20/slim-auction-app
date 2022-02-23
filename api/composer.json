@@ -10,11 +10,17 @@
         "roave/security-advisories": "dev-latest",
         "overtrue/phplint": "^4.1",
         "squizlabs/php_codesniffer": "^3.6",
-        "vimeo/psalm": "^4.21"
+        "vimeo/psalm": "^4.21",
+        "phpunit/phpunit": "^9.5"
     },
     "autoload": {
         "psr-4": {
             "App\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Test\\": "tests/"
         }
     },
     "scripts": {
@@ -22,6 +28,7 @@
         "lint": "phplint",
         "cs-check": "phpcs",
         "cs-fix": "phpcbf",
-        "psalm": "psalm"
+        "psalm": "psalm",
+        "test": "phpunit --colors=always"
     }
 }
