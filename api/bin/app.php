@@ -3,13 +3,18 @@
 declare(strict_types=1);
 
 use Psr\Container\ContainerInterface;
-use Slim\App;
+use Symfony\Component\Console\Application;
 
 require __DIR__ . '/../vendor/autoload.php';
 
 /** @var ContainerInterface $container */
 $container = (require __DIR__ . '/../config/container.php')();
 
-/** @var App */
-$app = (require __DIR__ . '/../config/app.php')($container);
+$app = new Application();
+
+$commands = $container->get('config')['console']['commands'];
+foreach ($commands as $command) {
+    $app->add($container->get($command));
+}
+
 $app->run();
