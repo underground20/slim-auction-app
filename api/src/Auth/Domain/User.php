@@ -18,6 +18,7 @@ class User
     private \DateTimeImmutable $createdAt;
     private \ArrayObject $networks;
     private ?Token $passwordResetToken = null;
+    private Role $role;
 
     private function __construct(UserId $userId, Email $email, Status $status)
     {
@@ -26,6 +27,7 @@ class User
         $this->status = $status;
         $this->createdAt = new \DateTimeImmutable();
         $this->networks = new \ArrayObject();
+        $this->role = Role::USER;
     }
 
     public static function selfRegister(UserId $userId, Email $email, string $passwordHash, Token $token): self
@@ -92,9 +94,19 @@ class User
         $this->passwordResetToken = null;
     }
 
+    public function changeRole(Role $role): void
+    {
+        $this->role = $role;
+    }
+
     public function getStatus(): Status
     {
         return $this->status;
+    }
+
+    public function getRole(): Role
+    {
+        return $this->role;
     }
 
     public function getUserId(): UserId
