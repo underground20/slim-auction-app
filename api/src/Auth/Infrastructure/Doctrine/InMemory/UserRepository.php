@@ -9,7 +9,6 @@ use App\Auth\Domain\User;
 use App\Auth\Domain\UserId;
 use App\Auth\Domain\UserRepositoryInterface;
 use JetBrains\PhpStorm\Pure;
-use function DI\string;
 
 class UserRepository implements UserRepositoryInterface
 {
@@ -17,6 +16,7 @@ class UserRepository implements UserRepositoryInterface
     private array $confirmTokenToUserAssoc;
     private array $networkToUserAssoc;
     private array $userIdToUserAssoc;
+    private array $passwordResetTokenToUserAssoc;
 
     #[Pure] public function hasByEmail(Email $email): bool
     {
@@ -29,6 +29,9 @@ class UserRepository implements UserRepositoryInterface
         $this->userIdToUserAssoc[(string) $user->getUserId()] = $user;
         if ($user->getConfirmToken() !== null) {
             $this->confirmTokenToUserAssoc[$user->getConfirmToken()->getValue()] = $user;
+        }
+        if ($user->getPasswordResetToken() !== null) {
+            $this->passwordResetTokenToUserAssoc[$user->getPasswordResetToken()->getValue()] = $user;
         }
         if (!empty($user->getNetworks()))
         {
@@ -50,5 +53,15 @@ class UserRepository implements UserRepositoryInterface
     public function get(UserId $userId): User
     {
         return $this->userIdToUserAssoc[(string) $userId];
+    }
+
+    #[Pure] public function getByEmail(Email $email): User
+    {
+        return $this->emailToUserAssoc[$email->getValue()];
+    }
+
+    #[Pure] public function findByPasswordResetToken(Token $token): ?User
+    {
+        return $this->passwordResetTokenToUserAssoc[$token->getValue()];
     }
 }

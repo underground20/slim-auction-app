@@ -98,4 +98,27 @@ class UserTest extends TestCase
         self::expectException(ConfirmationNotRequiredException::class);
         $user->confirmJoin(new Token(Uuid::uuid4()->toString(), new \DateTimeImmutable()));
     }
+
+    public function testRequestPasswordReset(): void
+    {
+        $user = (new UserBuilder())->active()->build();
+
+        $date = new \DateTimeImmutable();
+        $token = new Token(Uuid::uuid4()->toString(), $date);
+        $user->requestPasswordReset($token, $date);
+
+        self::assertTrue($user->getPasswordResetToken()->isEqual($token->getValue()));
+    }
+
+    public function testPasswordReset(): void
+    {
+        $user = (new UserBuilder())->active()->build();
+        $token = new Token($value = Uuid::uuid4()->toString(), $date = new \DateTimeImmutable());
+
+        $user->requestPasswordReset($token, $date);
+        $user->resetPassword(new Token($value, $date->modify('-1 day')), $hash = 'hash');
+
+        self::assertNull($user->getPasswordResetToken());
+        self::assertEquals($user->getPasswordHash(), $hash);
+    }
 }

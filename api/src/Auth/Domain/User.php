@@ -4,6 +4,9 @@ namespace App\Auth\Domain;
 
 use App\Auth\Domain\Exception\ConfirmationNotRequiredException;
 use App\Auth\Domain\Exception\NetworkAlreadyAttachedException;
+use App\Auth\Domain\Exception\RequestPasswordResetAlreadySentException;
+use App\Auth\Domain\Exception\ResetPasswordNotRequestedException;
+use App\Auth\Domain\Exception\UserNotActiveException;
 
 class User
 {
@@ -14,6 +17,7 @@ class User
     private Status $status;
     private \DateTimeImmutable $createdAt;
     private \ArrayObject $networks;
+    private ?Token $passwordResetToken = null;
 
     private function __construct(UserId $userId, Email $email, Status $status)
     {
@@ -65,6 +69,29 @@ class User
         $this->networks->append($network);
     }
 
+    public function requestPasswordReset(Token $token, \DateTimeImmutable $date)
+    {
+        if (!$this->status->isActive()) {
+            throw new UserNotActiveException();
+        }
+        if ($this->passwordResetToken !== null && !$this->passwordResetToken->isExpiredTo($date)) {
+            throw new RequestPasswordResetAlreadySentException();
+        }
+
+        $this->passwordResetToken = $token;
+    }
+
+    public function resetPassword(Token $token, string $passwordHash)
+    {
+        if ($this->passwordResetToken === null) {
+            throw new ResetPasswordNotRequestedException();
+        }
+
+        $this->passwordResetToken->validate($token);
+        $this->passwordHash = $passwordHash;
+        $this->passwordResetToken = null;
+    }
+
     public function getStatus(): Status
     {
         return $this->status;
@@ -73,6 +100,11 @@ class User
     public function getUserId(): UserId
     {
         return $this->userId;
+    }
+
+    public function getPasswordResetToken(): ?Token
+    {
+        return $this->passwordResetToken;
     }
 
     /**
