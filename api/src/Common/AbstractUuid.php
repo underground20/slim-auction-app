@@ -2,6 +2,7 @@
 
 namespace App\Common;
 
+use JetBrains\PhpStorm\Pure;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 
@@ -16,7 +17,7 @@ class AbstractUuid
 
     public function getValue(): string
     {
-        return $this->value->toString();
+        return $this->value;
     }
 
     public static function generate(): static
@@ -24,7 +25,12 @@ class AbstractUuid
         return new static(Uuid::uuid4());
     }
 
-    public function __toString(): string
+    public static function createFromString(string $value): static
+    {
+        return new static(Uuid::fromString($value));
+    }
+
+    #[Pure] public function __toString(): string
     {
         return $this->getValue();
     }

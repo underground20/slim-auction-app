@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Auth\Command\Confirm;
+namespace App\Auth\Command\JoinByNetwork;
 
+use App\Auth\Domain\Email;
+use App\Auth\Domain\Network;
 use App\Auth\Domain\Service\UserAuthenticationService;
-use App\Auth\Domain\Token;
 
 class Handler
 {
@@ -16,6 +17,9 @@ class Handler
 
     public function handle(Command $command): void
     {
-        $this->authenticationService->confirmJoin(new Token($command->token, new \DateTimeImmutable()));
+        $this->authenticationService->joinByNetwork(
+            new Email($command->email),
+            new Network($command->network, $command->identity)
+        );
     }
 }

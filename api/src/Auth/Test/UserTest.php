@@ -6,6 +6,8 @@ use App\Auth\Domain\Email;
 use App\Auth\Domain\Exception\ExpiredTokenException;
 use App\Auth\Domain\Exception\IncorrectTokenException;
 use App\Auth\Domain\Exception\ConfirmationNotRequiredException;
+use App\Auth\Domain\Exception\NetworkAlreadyAttachedException;
+use App\Auth\Domain\Network;
 use App\Auth\Domain\Token;
 use App\Auth\Domain\User;
 use App\Auth\Domain\UserId;
@@ -41,6 +43,29 @@ class UserTest extends TestCase
 
         self::assertTrue($user->getStatus()->isActive());
         self::assertNull($user->getConfirmToken());
+    }
+
+    public function testJoinByNetwork(): void
+    {
+        $network = new Network('google', 'google-1');
+        $user = User::joinByNetwork(UserId::generate(), new Email('test@gmail.com'), $network);
+
+        self::assertTrue($user->getStatus()->isActive());
+        self::assertContains($network, $user->getNetworks());
+        self::assertEquals($network, $user->getNetworks()[0]);
+    }
+
+    public function testAttachNetworkThrowAlreadyAttachedException(): void
+    {
+        $user = (new UserBuilder())
+            ->active()
+            ->build();
+
+        $network = new Network('google', 'google-1');
+        $user->attachNetwork($network);
+
+        self::expectException(NetworkAlreadyAttachedException::class);
+        $user->attachNetwork($network);
     }
 
     public function testConfirmThrowIncorrectTokenException(): void

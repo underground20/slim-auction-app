@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Auth\Domain;
+namespace App\Auth\Domain\Exception;
 
 use JetBrains\PhpStorm\Pure;
 
