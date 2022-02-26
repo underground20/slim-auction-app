@@ -21,4 +21,13 @@ class UserAuthenticationService
 
         $this->userRepository->add($user);
     }
+
+    public function confirm(Token $token): void
+    {
+        if (!$user = $this->userRepository->findByConfirmToken($token)) {
+            throw new \DomainException('Incorrect token');
+        }
+
+        $user->confirmJoin($token);
+    }
 }

@@ -2,6 +2,8 @@
 
 namespace App\Auth\Domain;
 
+use App\Auth\Domain\Exception\ExpiredTokenException;
+use App\Auth\Domain\Exception\IncorrectTokenException;
 use Webmozart\Assert\Assert;
 
 class Token
@@ -24,5 +26,26 @@ class Token
     public function getExpiredAt(): \DateTimeImmutable
     {
         return $this->expiredAt;
+    }
+
+    public function validate(self $token): void
+    {
+        if (!$this->isEqual($token->getValue())) {
+            throw new IncorrectTokenException();
+        }
+
+        if ($this->isExpiredTo($token->getExpiredAt())) {
+            throw new ExpiredTokenException();
+        }
+    }
+
+    public function isEqual(string $value): bool
+    {
+        return $this->value === $value;
+    }
+
+    public function isExpiredTo(\DateTimeImmutable $date): bool
+    {
+        return $this->expiredAt <= $date;
     }
 }

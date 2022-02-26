@@ -2,18 +2,22 @@
 
 namespace App\Auth\Domain;
 
+use App\Auth\Domain\Exception\ConfirmationNotRequiredException;
+
 class User
 {
     private UserId $userId;
     private Email $email;
     private string $passwordHash;
-    private ?Token $token;
+    private ?Token $confirmToken;
+    private Status $status;
     private \DateTimeImmutable $createdAt;
 
-    public function __construct(UserId $userId, Email $email)
+    private function __construct(UserId $userId, Email $email)
     {
         $this->userId = $userId;
         $this->email = $email;
+        $this->status = Status::WAIT;
         $this->createdAt = new \DateTimeImmutable();
     }
 
@@ -27,9 +31,30 @@ class User
         $self = new self($userId, $email);
         $self->email = $email;
         $self->passwordHash = $passwordHash;
-        $self->token = $token;
+        $self->confirmToken = $token;
 
         return $self;
+    }
+
+    public function confirmJoin(Token $token): void
+    {
+        if ($this->confirmToken === null) {
+            throw new ConfirmationNotRequiredException();
+        }
+
+        $this->confirmToken->validate($token);
+        $this->status = Status::ACTIVE;
+        $this->confirmToken = null;
+    }
+
+    public function getStatus(): Status
+    {
+        return $this->status;
+    }
+
+    public function getPasswordHash(): string
+    {
+        return $this->passwordHash;
     }
 
     public function getEmail(): Email
@@ -42,9 +67,9 @@ class User
         $this->passwordHash = $passwordHash;
     }
 
-    public function getToken(): ?Token
+    public function getConfirmToken(): ?Token
     {
-        return $this->token;
+        return $this->confirmToken;
     }
 
     public function getCreatedAt(): \DateTimeImmutable
