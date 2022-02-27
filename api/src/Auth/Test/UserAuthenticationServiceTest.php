@@ -8,7 +8,7 @@ use App\Auth\Domain\Exception\UserWithNetworkAlreadyExistException;
 use App\Auth\Domain\Network;
 use App\Auth\Domain\Service\UserAuthenticationService;
 use App\Auth\Domain\UserRepositoryInterface;
-use App\Auth\Infrastructure\Doctrine\InMemory\UserRepository;
+use App\Auth\Infrastructure\Doctrine\DBAL\InMemory\UserRepository;
 use PHPUnit\Framework\TestCase;
 
 class UserAuthenticationServiceTest extends TestCase

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Auth\Infrastructure\Doctrine\InMemory;
+namespace App\Auth\Infrastructure\Doctrine\DBAL\InMemory;
 
 use App\Auth\Domain\Email;
 use App\Auth\Domain\Network;

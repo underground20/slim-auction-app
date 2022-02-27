@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Auth\Infrastructure\Doctrine;
+namespace App\Auth\Infrastructure\Doctrine\DBAL;
 
 use App\Auth\Domain\Email;
 use App\Auth\Domain\Exception\UserNotFoundException;
