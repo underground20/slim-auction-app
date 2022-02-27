@@ -7,18 +7,46 @@ use App\Auth\Domain\Exception\NetworkAlreadyAttachedException;
 use App\Auth\Domain\Exception\RequestPasswordResetAlreadySentException;
 use App\Auth\Domain\Exception\ResetPasswordNotRequestedException;
 use App\Auth\Domain\Exception\UserNotActiveException;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Embedded;
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\OneToMany;
+use Doctrine\ORM\Mapping\Table;
 
+#[Entity]
+#[Table(name: "auth_users")]
 class User
 {
+    #[Column(type: "auth_user_id")]
+    #[Id]
     private UserId $userId;
+
+    #[Column(type: "auth_user_email", unique: true)]
     private Email $email;
+
+    #[Column(type: "string", nullable: true)]
     private string $passwordHash;
-    private ?Token $confirmToken = null;
+
+    #[Embedded(class: Token::class)]
+    private ?Token $joinConfirmToken = null;
+
+    #[Column(type: "auth_user_status")]
     private Status $status;
+
+    #[Column(type: "datetime_immutable")]
     private \DateTimeImmutable $createdAt;
-    private \ArrayObject $networks;
+
+    #[Embedded(class: Token::class)]
     private ?Token $passwordResetToken = null;
+
+    #[Column(type: "auth_user_role", length: 16)]
     private Role $role;
+
+    #[OneToMany(mappedBy: "user", targetEntity: UserNetwork::class, cascade: ["all"], orphanRemoval: true)]
+    private Collection $networks;
 
     private function __construct(UserId $userId, Email $email, Status $status)
     {
@@ -26,7 +54,7 @@ class User
         $this->email = $email;
         $this->status = $status;
         $this->createdAt = new \DateTimeImmutable();
-        $this->networks = new \ArrayObject();
+        $this->networks = new ArrayCollection();
         $this->role = Role::USER;
     }
 
@@ -35,40 +63,40 @@ class User
         $self = new self($userId, $email, Status::WAIT);
         $self->email = $email;
         $self->passwordHash = $passwordHash;
-        $self->confirmToken = $token;
+        $self->joinConfirmToken = $token;
 
         return $self;
     }
 
     public function confirmJoin(Token $token): void
     {
-        if ($this->confirmToken === null) {
+        if ($this->joinConfirmToken === null) {
             throw new ConfirmationNotRequiredException();
         }
 
-        $this->confirmToken->validate($token);
+        $this->joinConfirmToken->validate($token);
         $this->status = Status::ACTIVE;
-        $this->confirmToken = null;
+        $this->joinConfirmToken = null;
     }
 
     public static function joinByNetwork(UserId $userId, Email $email, Network $network): self
     {
         $user = new self($userId, $email, Status::ACTIVE);
-        $user->networks->append($network);
+        $user->networks->add(new UserNetwork($user, $network));
 
         return $user;
     }
 
     public function attachNetwork(Network $network)
     {
-        /** @var Network $existNetwork */
+        /** @var UserNetwork $existNetwork */
         foreach ($this->networks as $existNetwork) {
-            if ($existNetwork->isEqualTo($network))
+            if ($existNetwork->getNetwork()->isEqualTo($network))
             {
                 throw new NetworkAlreadyAttachedException();
             }
         }
-        $this->networks->append($network);
+        $this->networks->add(new UserNetwork($this, $network));
     }
 
     public function requestPasswordReset(Token $token, \DateTimeImmutable $date)
@@ -124,7 +152,9 @@ class User
      */
     public function getNetworks(): array
     {
-        return $this->networks->getArrayCopy();
+        return $this->networks->map(static function (UserNetwork $network) {
+            return $network->getNetwork();
+        })->toArray();
     }
 
     public function getPasswordHash(): string
@@ -137,9 +167,9 @@ class User
         return $this->email;
     }
 
-    public function getConfirmToken(): ?Token
+    public function getJoinConfirmToken(): ?Token
     {
-        return $this->confirmToken;
+        return $this->joinConfirmToken;
     }
 
     public function getCreatedAt(): \DateTimeImmutable

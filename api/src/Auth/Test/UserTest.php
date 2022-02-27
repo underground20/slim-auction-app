@@ -28,7 +28,7 @@ class UserTest extends TestCase
         self::assertEquals($userId, $user->getUserId());
         self::assertEquals($email, $user->getEmail());
         self::assertEquals($hash, $user->getPasswordHash());
-        self::assertEquals($token, $user->getConfirmToken());
+        self::assertEquals($token, $user->getJoinConfirmToken());
         self::assertTrue($user->getStatus()->isWait());
         self::assertFalse($user->getStatus()->isActive());
     }
@@ -42,7 +42,7 @@ class UserTest extends TestCase
         $user->confirmJoin(new Token($token->getValue(), $token->getExpiredAt()->modify('-1 day')));
 
         self::assertTrue($user->getStatus()->isActive());
-        self::assertNull($user->getConfirmToken());
+        self::assertNull($user->getJoinConfirmToken());
     }
 
     public function testJoinByNetwork(): void

@@ -27,8 +27,8 @@ class UserRepository implements UserRepositoryInterface
     {
         $this->emailToUserAssoc[$user->getEmail()->getValue()] = $user;
         $this->userIdToUserAssoc[(string) $user->getUserId()] = $user;
-        if ($user->getConfirmToken() !== null) {
-            $this->confirmTokenToUserAssoc[$user->getConfirmToken()->getValue()] = $user;
+        if ($user->getJoinConfirmToken() !== null) {
+            $this->confirmTokenToUserAssoc[$user->getJoinConfirmToken()->getValue()] = $user;
         }
         if ($user->getPasswordResetToken() !== null) {
             $this->passwordResetTokenToUserAssoc[$user->getPasswordResetToken()->getValue()] = $user;
