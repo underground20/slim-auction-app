@@ -26,9 +26,9 @@ class UserRepository implements UserRepositoryInterface
     public function hasByEmail(Email $email): bool
     {
         return $this->repo->createQueryBuilder('u')
-            ->select('COUNT(u.id)')
+            ->select('COUNT(u.userId)')
             ->where('u.email = :email')
-            ->set(':email', $email->getValue())
+            ->setParameter(':email', $email->getValue())
             ->getQuery()->getSingleScalarResult() > 0;
     }
 
@@ -45,12 +45,12 @@ class UserRepository implements UserRepositoryInterface
     public function hasByNetwork(Network $network): bool
     {
         return $this->repo->createQueryBuilder('u')
-            ->select('COUNT(u.id)')
+            ->select('COUNT(u.userId)')
             ->innerJoin('u.networks', 'n')
             ->where('n.network.name = :name')
             ->andWhere('n.network.identity = :identity')
-            ->set(':name', $network->getName())
-            ->set(':identity', $network->getIdentity())
+            ->setParameter(':name', $network->getName())
+            ->setParameter(':identity', $network->getIdentity())
             ->getQuery()->getSingleScalarResult() > 0;
     }
 
