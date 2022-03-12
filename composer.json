@@ -12,7 +12,8 @@
         "symfony/cache": "^6.0",
         "doctrine/annotations": "^1.13",
         "laminas/laminas-config-aggregator": "^1.7",
-        "doctrine/migrations": "^3.4"
+        "doctrine/migrations": "^3.4",
+        "symfony/mailer": "^6.0"
     },
     "require-dev": {
         "roave/security-advisories": "dev-latest",

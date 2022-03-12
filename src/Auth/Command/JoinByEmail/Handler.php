@@ -5,6 +5,7 @@ namespace App\Auth\Command\JoinByEmail;
 use App\Auth\Domain\Email;
 use App\Auth\Domain\Service\UserAuthenticationService;
 use App\Auth\Domain\UserId;
+use App\Auth\Service\TokenSender;
 use App\Auth\Service\PasswordEncryptorInterface;
 use App\Auth\Service\TokenizerInterface;
 
@@ -13,24 +14,29 @@ class Handler
     private UserAuthenticationService $authenticationService;
     private PasswordEncryptorInterface $passwordEncryptor;
     private TokenizerInterface $tokenizer;
+    private TokenSender $tokenSender;
 
     public function __construct(
         UserAuthenticationService $authenticationService,
         PasswordEncryptorInterface $passwordEncryptor,
-        TokenizerInterface $tokenizer
+        TokenizerInterface $tokenizer,
+        TokenSender $tokenSender
     ) {
         $this->authenticationService = $authenticationService;
         $this->passwordEncryptor = $passwordEncryptor;
         $this->tokenizer = $tokenizer;
+        $this->tokenSender = $tokenSender;
     }
 
     public function handle(Command $command): void
     {
         $this->authenticationService->requestJoinByEmail(
             UserId::generate(),
-            new Email($command->email),
+            $email = new Email($command->email),
             $this->passwordEncryptor->encrypt($command->password),
-            $this->tokenizer->generate(new \DateTimeImmutable())
+            $token = $this->tokenizer->generate(new \DateTimeImmutable())
         );
+
+        $this->tokenSender->sendUserRegisteredMail($email, $token);
     }
 }
