@@ -3,19 +3,19 @@ services:
     api:
         container_name: api
         build:
-            context: api/docker/development/nginx
+            context: docker/development/nginx
         ports:
             - "8080:80"
         volumes:
-            - ./api:/app
+            - ./:/app
         depends_on:
             - api-php-fpm
     api-php-fpm:
         container_name: api-php-fpm
         build: 
-            context: api/docker/development/php-fpm
+            context: docker/development/php-fpm
         volumes: 
-            - ./api:/app
+            - ./:/app
         environment:
             APP_DEBUG: 1
             APP_ENV: dev
@@ -24,9 +24,9 @@ services:
     api-php-cli:
         container_name: api-php-cli
         build:
-            context: api/docker/development/php-cli
+            context: docker/development/php-cli
         volumes:
-            - ./api:/app
+            - ./:/app
         environment:
             APP_DEBUG: 1
             APP_ENV: dev

@@ -8,8 +8,6 @@ RUN apk add libpq-dev \
     && docker-php-ext-configure pgsql --with-pgsql=/usr/local/pgsql \
     && docker-php-ext-install pdo_pgsql
 
-COPY ./conf.d /usr/local/etc/php/conf.d
-
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/bin --filename=composer --quiet
 
 WORKDIR /app

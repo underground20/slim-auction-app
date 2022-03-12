@@ -10,6 +10,9 @@ RUN apk add libpq-dev \
 
 RUN mv $PHP_INI_DIR/php.ini-development $PHP_INI_DIR/php.ini
 
-COPY ./conf.d /usr/local/etc/php/conf.d
+COPY conf.d /usr/local/etc/php/conf.d
 
 WORKDIR /app
+
+COPY entrypoint.sh /usr/local/bin/docker-php-entrypoint
+RUN chmod +x /usr/local/bin/docker-php-entrypoint
