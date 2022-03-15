@@ -14,7 +14,8 @@
         "laminas/laminas-config-aggregator": "^1.7",
         "doctrine/migrations": "^3.4",
         "symfony/mailer": "^6.0",
-        "symfony/validator": "^6.0"
+        "symfony/validator": "^6.0",
+        "monolog/monolog": "^2.4"
     },
     "require-dev": {
         "roave/security-advisories": "dev-latest",

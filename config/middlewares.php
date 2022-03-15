@@ -5,16 +5,18 @@ declare(strict_types=1);
 use App\Http\Middleware\Flusher;
 use App\Http\Middleware\ValidationExceptionHandler;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Container\ContainerInterface;
 use Slim\App;
+use Slim\Middleware\ErrorMiddleware;
 
 return static function (App $app): void {
+    /** @var ContainerInterface $container */
     $container = $app->getContainer();
-    /** @psalm-var array{debug:bool} */
-    $config = $container->get('config');
     $em = $container->get(EntityManagerInterface::class);
 
     $app->addBodyParsingMiddleware();
     $app->addMiddleware(new ValidationExceptionHandler());
-    $app->addErrorMiddleware($config['debug'], true, true);
+    $app->add(ErrorMiddleware::class);
+
     $app->addMiddleware(new Flusher($em));
 };
