@@ -12,9 +12,9 @@ class AbstractUuid
 {
     protected string $value;
 
-    public function __construct(UuidInterface $value)
+    private function __construct(UuidInterface $value)
     {
-        $this->value = $value;
+        $this->value = $value->toString();
     }
 
     public function getValue(): string
