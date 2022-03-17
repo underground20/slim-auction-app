@@ -19,11 +19,11 @@ psalm:
 	docker-compose exec api-php-cli composer psalm
 
 cs-fix:
-	docker-compose exec api-php-cli composer cs-fix
+	docker-compose exec api-php-cli vendor/bin/php-cs-fixer fix --allow-risky=yes
 
 lint:
 	docker-compose exec api-php-cli composer lint
-	docker-compose exec api-php-cli composer cs-check
+	docker-compose exec api-php-cli vendor/bin/php-cs-fixer fix --allow-risky=yes --dry-run --diff
 
 composer-install:
 	docker-compose run --rm api-php-cli composer install
