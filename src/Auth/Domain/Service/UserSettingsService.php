@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Auth\Domain\Service;
 
 use App\Auth\Domain\Email;
@@ -26,8 +28,7 @@ class UserSettingsService
 
     public function resetPassword(Token $token, string $passwordHash): void
     {
-        if (!$user = $this->userRepository->findByPasswordResetToken($token))
-        {
+        if (!$user = $this->userRepository->findByPasswordResetToken($token)) {
             throw new UserNotFoundException();
         }
 

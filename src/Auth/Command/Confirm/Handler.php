@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Auth\Command\Confirm;
 
 use App\Auth\Domain\Service\UserAuthenticationService;

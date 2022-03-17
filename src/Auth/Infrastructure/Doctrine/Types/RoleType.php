@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Auth\Infrastructure\Doctrine\Types;
 
 use App\Auth\Domain\Role;
@@ -18,7 +20,7 @@ class RoleType extends StringType
 
     public function convertToPHPValue($value, AbstractPlatform $platform): ?Role
     {
-        return (!empty($value)) ? Role::from($value): null;
+        return (!empty($value)) ? Role::from($value) : null;
     }
 
     public function getName(): string

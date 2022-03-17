@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Auth\Infrastructure\Doctrine\Types;
 
 use App\Auth\Domain\Status;
@@ -18,7 +20,7 @@ class StatusType extends IntegerType
 
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
-        return (!empty($value)) ? Status::from($value): null;
+        return (!empty($value)) ? Status::from($value) : null;
     }
 
     public function getName(): string

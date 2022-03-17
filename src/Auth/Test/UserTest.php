@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Auth\Test;
 
 use App\Auth\Domain\Email;
+use App\Auth\Domain\Exception\ConfirmationNotRequiredException;
 use App\Auth\Domain\Exception\ExpiredTokenException;
 use App\Auth\Domain\Exception\IncorrectTokenException;
-use App\Auth\Domain\Exception\ConfirmationNotRequiredException;
 use App\Auth\Domain\Exception\NetworkAlreadyAttachedException;
 use App\Auth\Domain\Network;
 use App\Auth\Domain\Token;

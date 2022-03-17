@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Data\Doctrine;
 
 use Doctrine\Common\EventSubscriber;
@@ -12,7 +14,7 @@ class FixDefaultSchemaSubscriber implements EventSubscriber
     public function getSubscribedEvents(): array
     {
         return [
-            ToolEvents::postGenerateSchema => 'postGeneratorSchema'
+            ToolEvents::postGenerateSchema => 'postGeneratorSchema',
         ];
     }
 

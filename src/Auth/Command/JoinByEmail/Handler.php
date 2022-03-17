@@ -1,13 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Auth\Command\JoinByEmail;
 
 use App\Auth\Domain\Email;
 use App\Auth\Domain\Service\UserAuthenticationService;
 use App\Auth\Domain\UserId;
-use App\Auth\Service\TokenSender;
 use App\Auth\Service\PasswordEncryptorInterface;
 use App\Auth\Service\TokenizerInterface;
+use App\Auth\Service\TokenSender;
 
 class Handler
 {

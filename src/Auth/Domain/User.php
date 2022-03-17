@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Auth\Domain;
 
 use App\Auth\Domain\Exception\ConfirmationNotRequiredException;
@@ -87,19 +89,18 @@ class User
         return $user;
     }
 
-    public function attachNetwork(Network $network)
+    public function attachNetwork(Network $network): void
     {
         /** @var UserNetwork $existNetwork */
         foreach ($this->networks as $existNetwork) {
-            if ($existNetwork->getNetwork()->isEqualTo($network))
-            {
+            if ($existNetwork->getNetwork()->isEqualTo($network)) {
                 throw new NetworkAlreadyAttachedException();
             }
         }
         $this->networks->add(new UserNetwork($this, $network));
     }
 
-    public function requestPasswordReset(Token $token, \DateTimeImmutable $date)
+    public function requestPasswordReset(Token $token, \DateTimeImmutable $date): void
     {
         if (!$this->status->isActive()) {
             throw new UserNotActiveException();
@@ -111,7 +112,7 @@ class User
         $this->passwordResetToken = $token;
     }
 
-    public function resetPassword(Token $token, string $passwordHash)
+    public function resetPassword(Token $token, string $passwordHash): void
     {
         if ($this->passwordResetToken === null) {
             throw new ResetPasswordNotRequestedException();
@@ -152,9 +153,7 @@ class User
      */
     public function getNetworks(): array
     {
-        return $this->networks->map(static function (UserNetwork $network) {
-            return $network->getNetwork();
-        })->toArray();
+        return $this->networks->map(static fn (UserNetwork $network) => $network->getNetwork())->toArray();
     }
 
     public function getPasswordHash(): string

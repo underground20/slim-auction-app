@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Auth\Infrastructure\Doctrine\DBAL\InMemory;
 
 use App\Auth\Domain\Email;
@@ -26,15 +28,14 @@ class UserRepository implements UserRepositoryInterface
     public function add(User $user): void
     {
         $this->emailToUserAssoc[$user->getEmail()->getValue()] = $user;
-        $this->userIdToUserAssoc[(string) $user->getUserId()] = $user;
+        $this->userIdToUserAssoc[(string)$user->getUserId()] = $user;
         if ($user->getJoinConfirmToken() !== null) {
             $this->confirmTokenToUserAssoc[$user->getJoinConfirmToken()->getValue()] = $user;
         }
         if ($user->getPasswordResetToken() !== null) {
             $this->passwordResetTokenToUserAssoc[$user->getPasswordResetToken()->getValue()] = $user;
         }
-        if (!empty($user->getNetworks()))
-        {
+        if (!empty($user->getNetworks())) {
             $network = $user->getNetworks()[0];
             $this->networkToUserAssoc[$network->getIdentity()] = $user;
         }
@@ -52,7 +53,7 @@ class UserRepository implements UserRepositoryInterface
 
     public function get(UserId $userId): User
     {
-        return $this->userIdToUserAssoc[(string) $userId];
+        return $this->userIdToUserAssoc[(string)$userId];
     }
 
     #[Pure] public function getByEmail(Email $email): User

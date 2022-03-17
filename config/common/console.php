@@ -8,8 +8,8 @@ return [
     'config' => [
         'console' => [
             'commands' => [
-                HelloCommand::class
+                HelloCommand::class,
             ],
-        ]
+        ],
     ],
 ];

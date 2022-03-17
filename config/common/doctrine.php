@@ -72,14 +72,14 @@ return [
             ],
             'subscribers' => [],
             'metadata_dirs' => [
-                __DIR__ . '/../../src/Auth/Domain'
+                __DIR__ . '/../../src/Auth/Domain',
             ],
             'types' => [
                 IdType::NAME => IdType::class,
                 StatusType::NAME => StatusType::class,
                 RoleType::NAME => RoleType::class,
-                EmailType::NAME => EmailType::class
-            ]
-        ]
-    ]
+                EmailType::NAME => EmailType::class,
+            ],
+        ],
+    ],
 ];

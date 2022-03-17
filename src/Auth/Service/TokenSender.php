@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Auth\Service;
 
 use App\Auth\Domain\Token;
@@ -21,7 +23,7 @@ class TokenSender
             ->from('test1@gmail.com')
             ->to($email->getValue())
             ->subject('Email confirmation')
-            ->text("Your token: {$token->getValue()}, expired at 
+            ->text("Your token: {$token->getValue()}, expired at
                  {$token->getExpiredAt()->format("h:i:s Y-m-d")}");
 
         $this->mailer->send($message);

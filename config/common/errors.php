@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\ErrorHandler\SentryDecorator;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
@@ -35,7 +37,7 @@ return [
     'config' => [
         'errors' => [
             'display_errors' => (bool)getenv('APP_DEBUG'),
-            'log' => true
-        ]
-    ]
+            'log' => true,
+        ],
+    ],
 ];

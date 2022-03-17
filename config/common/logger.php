@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
@@ -24,7 +26,7 @@ return [
         'logger' => [
             'debug' => (bool)getenv('APP_DEBUG'),
             'file' => null,
-            'stderr' => true
-        ]
-    ]
+            'stderr' => true,
+        ],
+    ],
 ];

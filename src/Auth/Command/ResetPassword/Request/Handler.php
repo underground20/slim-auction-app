@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Auth\Command\ResetPassword\Request;
 
 use App\Auth\Domain\Email;

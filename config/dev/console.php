@@ -29,11 +29,11 @@ return [
                 ExecuteCommand::class,
                 DiffCommand::class,
                 MigrateCommand::class,
-                GenerateCommand::class
+                GenerateCommand::class,
             ],
             'fixture_paths' => [
-                __DIR__ . '/../../src/Auth/Fixture'
+                __DIR__ . '/../../src/Auth/Fixture',
             ],
-        ]
-    ]
+        ],
+    ],
 ];
