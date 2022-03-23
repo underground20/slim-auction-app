@@ -16,8 +16,10 @@ return [
         $em = $container->get(EntityManagerInterface::class);
         return new UserRepository($em);
     },
-    TokenizerInterface::class => static fn (ContainerInterface $container): TokenizerInterface => new Tokenizer(new DateInterval($container->get('config')['token_ttl'])),
-    PasswordEncryptorInterface::class => static fn (ContainerInterface $container): PasswordEncryptorInterface => new PasswordEncryptor(),
+    TokenizerInterface::class => static function (ContainerInterface $container): TokenizerInterface {
+        return new Tokenizer(new DateInterval($container->get('config')['token_ttl']));
+    },
+    PasswordEncryptorInterface::class => static fn (): PasswordEncryptorInterface => new PasswordEncryptor(),
 
     'config' => [
         'token_ttl' => 'PT1H',

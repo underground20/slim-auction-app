@@ -11,18 +11,20 @@ use Symfony\Component\Mime\Email;
 class TokenSender
 {
     private MailerInterface $mailer;
+    private string $from;
 
-    public function __construct(MailerInterface $mailer)
+    public function __construct(MailerInterface $mailer, string $from)
     {
         $this->mailer = $mailer;
+        $this->from = $from;
     }
 
-    public function sendUserRegisteredMail(\App\Auth\Domain\Email $email, Token $token): void
+    public function send(\App\Auth\Domain\Email $email, Token $token): void
     {
         $message = (new Email())
-            ->from('test1@gmail.com')
+            ->from($this->from)
             ->to($email->getValue())
-            ->subject('Email confirmation')
+            ->subject('Token for action')
             ->text("Your token: {$token->getValue()}, expired at
                  {$token->getExpiredAt()->format("h:i:s Y-m-d")}");
 

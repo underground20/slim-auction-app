@@ -39,6 +39,6 @@ class Handler
             $token = $this->tokenizer->generate(new \DateTimeImmutable())
         );
 
-        $this->tokenSender->sendUserRegisteredMail($email, $token);
+        $this->tokenSender->send($email, $token);
     }
 }
