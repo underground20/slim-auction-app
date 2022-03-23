@@ -4,7 +4,12 @@ declare(strict_types=1);
 
 namespace App\Auth\Command\Confirm;
 
+use Symfony\Component\Validator\Constraints\NotBlank;
+
 class Command
 {
-    public string $token;
+    public function __construct(
+        #[NotBlank]
+        public string $token,
+    ) {}
 }

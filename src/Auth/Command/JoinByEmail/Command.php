@@ -14,6 +14,5 @@ class Command
         public string $email,
         #[Length(min: 6, max: 100)]
         public string $password
-    ) {
-    }
+    ) {}
 }
