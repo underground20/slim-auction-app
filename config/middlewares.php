@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Middleware\DomainExceptionHandler;
 use App\Http\Middleware\Flusher;
 use App\Http\Middleware\ValidationExceptionHandler;
 use Doctrine\ORM\EntityManagerInterface;
@@ -16,6 +17,7 @@ return static function (App $app): void {
 
     $app->addBodyParsingMiddleware();
     $app->addMiddleware(new ValidationExceptionHandler());
+    $app->add(DomainExceptionHandler::class);
     $app->add(ErrorMiddleware::class);
 
     $app->addMiddleware(new Flusher($em));
